@@ -1,4 +1,36 @@
 from User import Admin, Client
+from Account import UserAccount, bank
+
+
+def client(aid):
+    current_user = None
+    for user in UserAccount.accounts:
+        if user.acc_num == aid:
+            current_user = user
+
+    while True:
+        print("1. Check available balance\n2. Deposit\n3. Withdraw\n4. Take loan\n5. Transfer money")
+        print("6. Exit Client Panel")
+        uin = int(input("What you want to do?: "))
+        if uin == 1:
+            for user in UserAccount.accounts:
+                if user.acc_num == aid:
+                    print(f"Available Balance: {user.balance}")
+        elif uin == 2:
+            deposit_amount = int(input("Enter the deposit amount: "))
+            current_user.deposit(deposit_amount)
+        elif uin == 3:
+            withdraw_amount = int(input("Enter the withdraw amount: "))
+            current_user.withdraw(withdraw_amount)
+        elif uin == 4:
+            loan_amount = int(input("Enter the loan amount: "))
+            current_user.take_loan(loan_amount)
+        elif uin == 5:
+            ac_num = int(input("Enter transfer account number: "))
+            t_amount = int(input("Enter transfer amount: "))
+            current_user.transfer_money(ac_num, t_amount)
+        elif uin == 6:
+            break
 
 
 def main():
@@ -13,14 +45,15 @@ def main():
             print("*" * 20)
             print("To log in type 1\nTo create a new account type 2")
             print("*" * 20)
-            user_input = int(input("Input 1 or 2:"))
+            user_input = int(input("Input 1 or 2: "))
 
             # log in into the account
             if user_input == 1:
                 email = input("Enter your email address: ")
                 password = input("Enter your password: ")
-                if Client.log_in(email, password):
-                    pass
+                return_data = Client.log_in(email, password)
+                if return_data[0]:
+                    client(return_data[1])
                 else:
                     print("Wrong email or password")
 
@@ -44,11 +77,21 @@ def main():
                 print("Successfully Login")
                 print("-" * 20)
                 while True:
-                    print("3. See all user accounts list")
+                    print("2. Delete an account\n3. See all user accounts list\n4. Total available balance\n5. Total loan amount\n6. Turn on or off loan feature")
                     print("7. Exit from admin panel")
                     admin_in = int(input("What you want to do?: "))
-                    if admin_in == 3:
+                    if admin_in == 2:
+                        anum = int(input("Enter the account number you want to delete: "))
+                        bank.delete_user(anum)
+                        Admin.delete_user(anum)
+                    elif admin_in == 3:
                         Admin.show_accounts()
+                    elif admin_in == 4:
+                        bank.total_balance()
+                    elif admin_in == 5:
+                        bank.total_loan()
+                    elif admin_in == 6:
+                        bank.loan_on_or_off()
                     elif admin_in == 7:
                         break
             else:
