@@ -1,15 +1,18 @@
 class User:
     accounts = []
 
-    def __init__(self, name, email) -> None:
+    def __init__(self, name, email, address, acc_type):
         self.name = name
         self.email = email
+        self.address = address
+        self.acc_type = acc_type
         User.accounts.append(self)
 
 
 class Client(User):
-    def __init__(self, name, email):
-        super().__init__(name, email)
+    def __init__(self, name, email, address, acc_type):
+        super().__init__(name, email, address, acc_type)
+        print("Created")
 
 
 class Admin(User):
@@ -19,6 +22,3 @@ class Admin(User):
             print(f"Name: {users.name} Email: {users.email}")
 
 
-us1 = Client("Ayon", "hi")
-us2 = Client("Saba", "li")
-us3 = Client("Sara", "ali")
