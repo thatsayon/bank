@@ -18,7 +18,8 @@ class Client(User):
     def __init__(self, name, email, address, password, acc_type):
         super().__init__(name, email, address, password, acc_type)
         UserAccount(self.account_num)
-        print("\nAccount Created Successfully!!!\nPlease log in now to use our facilities\n")
+        print("*"*20)
+        print("\nAccount Created Successfully!!!\nPlease log in to use our facilities\n")
 
     @staticmethod
     def log_in(email, password):
@@ -35,18 +36,30 @@ class Admin(User):
         self.email = email 
         self.password = password
         Admin.accounts.append(self)
+        print("*"*20)
         print("Admin account created successfully!")
+        print("*"*20)
         
     @staticmethod
     def show_accounts():
+        print("-"*20)
+        print("Accounts list: ")
         for users in User.accounts:
-            print(f"Name: {users.name} Email: {users.email} Account Number: {users.account_num}")
+            print(f"Name: {users.name} | Email: {users.email} | Account Number: {users.account_num}")
+        print("-"*20)
 
     @staticmethod
     def delete_user(ac_num):
         for users in User.accounts:
             if users.account_num == ac_num:
                 User.accounts.remove(users)
+                print(f"Account {ac_num} deleted successfully")
+                print("-"*20)
+                return
+        print("-"*20)
+        print(f"Account {ac_num} doesn't exist")
+        print("-"*20)
+
 
     @staticmethod
     def log_in(username, password):

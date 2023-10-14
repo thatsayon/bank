@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import datetime
 
 
 class Account(ABC):
@@ -8,6 +9,7 @@ class Account(ABC):
         self.acc_num = acc_num
         self.balance = 0
         self.loan = 0
+        self.history = []
         Account.accounts.append(self)
 
 
@@ -20,6 +22,7 @@ class UserAccount(Account):
         if amount > 0:
             self.balance += amount
             bank.balance += amount
+            self.history.append(f"${amount} deposit (Time: {datetime.datetime.now()})")
             print("-" * 20)
             print(f"Deposited ${amount}. New balance is ${self.balance}")
             print("-" * 20)
@@ -37,6 +40,7 @@ class UserAccount(Account):
         if amount >= 0 and amount <= self.balance:
             self.balance -= amount
             bank.balance -= amount
+            self.history.append(f"${amount} withdraw (Time: {datetime.datetime.now()})")
             print("-" * 20)
             print(f"Withdrew ${amount}. New balance: ${self.balance}")
             print("-" * 20)
@@ -67,6 +71,7 @@ class UserAccount(Account):
         self.loan_time += 1
         bank.loan += amount
         bank.balance -= amount
+        self.history.append(f"${amount} loan taken (Time: {datetime.datetime.now()})")
         print("-" * 20)
         print(f"${amount} loan has been added to your account. New balance ${self.balance} and total loan ${self.loan}")
         print("-" * 20)
@@ -77,17 +82,26 @@ class UserAccount(Account):
                 if self.balance >= amount:
                     users.balance += amount
                     self.balance -= amount
+                    self.history.append(f"${amount} has been transfered to account {ac_num} (Time: {datetime.datetime.now()})")
                     print("-" * 20)
                     print(f"${amount} has been successfully transferred. New balance ${self.balance}")
                     print("-" * 20)
+                    return
                 else:
                     print("-" * 20)
                     print("You don't have enough money to transfer")
                     print("-" * 20)
-            else:
-                print("-" * 20)
-                print("Account does not exist")
-                print("-" * 20)
+                    return
+        print("-" * 20)
+        print("Account does not exist")
+        print("-" * 20)
+    
+    def show_history(self):
+        print("-" * 20)
+        print("History: ")
+        for data in self.history:
+            print(data)
+        print("-" * 20)
 
 
 class BankAccount(Account):
@@ -106,12 +120,18 @@ class BankAccount(Account):
         print("-" * 20)
 
     def loan_on_or_off(self):
+        print("-" * 20)
         if self.loan_enable:
             uin = input("Loan feature is turned on. Do you want to turned it off?(Y/N): ")
-            self.loan_enable = not self.loan_enable if uin.lower() == 'y' else None
+            if uin.lower() == 'y':
+                self.loan_enable = not self.loan_enable  
+                print("Loan feature is turned off successfully")
         else:
-            uin = input("Loan feature is turned off. Do you want to turned it onn?(Y/N): ")
-            self.loan_enable = not self.loan_enable if uin.lower() == 'y' else None
+            uin = input("Loan feature is turned off. Do you want to turned it on?(Y/N): ")
+            if uin.lower() == 'y':
+                self.loan_enable = not self.loan_enable 
+                print("Loan feature is turned on successfully")
+        print("-" * 20)
 
 
     def delete_user(self, acc_num):
