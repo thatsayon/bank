@@ -29,6 +29,11 @@ class UserAccount(Account):
             print("-" * 20)
 
     def withdraw(self, amount):
+        if amount > bank.balance:
+            print("-" * 20)
+            print("Bank is bankrupt")
+            print("-" * 20)
+            return
         if amount >= 0 and amount <= self.balance:
             self.balance -= amount
             bank.balance -= amount
@@ -51,10 +56,17 @@ class UserAccount(Account):
             print("Loan feature is turned off by the bank.")
             print("-" * 20)
             return
+        if bank.balance < amount:
+            print("-" * 20)
+            print("Bank doesn't have the money to give loan.")
+            print("-" * 20)
+            return
+
         self.balance += amount
         self.loan += amount
         self.loan_time += 1
         bank.loan += amount
+        bank.balance -= amount
         print("-" * 20)
         print(f"${amount} loan has been added to your account. New balance ${self.balance} and total loan ${self.loan}")
         print("-" * 20)

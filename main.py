@@ -11,7 +11,7 @@ def client(aid):
     while True:
         print("1. Check available balance\n2. Deposit\n3. Withdraw\n4. Take loan\n5. Transfer money")
         print("6. Exit Client Panel")
-        uin = int(input("What you want to do?: "))
+        uin = int(input("Choose Option: "))
         if uin == 1:
             for user in UserAccount.accounts:
                 if user.acc_num == aid:
@@ -33,12 +33,38 @@ def client(aid):
             break
 
 
+def admin():
+    while True:
+        print("1. Create an admin account\n2. Delete an account\n3. See all user accounts list\n4. Total available balance\n5. Total loan amount\n6. Turn on or off loan feature")
+        print("7. Exit from admin panel")
+        admin_in = int(input("Choose Option: "))
+        if admin_in == 1:
+            name = input("Enter admin username: ")
+            email = input("Enter admin email address: ")
+            password = input("Enter admin password: ")
+            Admin(name, email, password)
+        elif admin_in == 2:
+            anum = int(input("Enter the account number you want to delete: "))
+            bank.delete_user(anum)
+            Admin.delete_user(anum)
+        elif admin_in == 3:
+            Admin.show_accounts()
+        elif admin_in == 4:
+            bank.total_balance()
+        elif admin_in == 5:
+            bank.total_loan()
+        elif admin_in == 6:
+            bank.loan_on_or_off()
+        elif admin_in == 7:
+            break
+
+
 def main():
     while True:
         print("*" * 20)
         print("For User Access Type 1\nFor Admin Access Type 2\nTo close the application type 3")
         print("*" * 20)
-        user_input = int(input("Input 1, 2 or 3: "))
+        user_input = int(input("Choose Option: "))
 
         # code to manage a user
         if user_input == 1:
@@ -56,7 +82,6 @@ def main():
                     client(return_data[1])
                 else:
                     print("Wrong email or password")
-
 
             # create an account
             elif user_input == 2:
@@ -76,24 +101,11 @@ def main():
             if admin_name == 'admin' and admin_pass == '123':
                 print("Successfully Login")
                 print("-" * 20)
-                while True:
-                    print("2. Delete an account\n3. See all user accounts list\n4. Total available balance\n5. Total loan amount\n6. Turn on or off loan feature")
-                    print("7. Exit from admin panel")
-                    admin_in = int(input("What you want to do?: "))
-                    if admin_in == 2:
-                        anum = int(input("Enter the account number you want to delete: "))
-                        bank.delete_user(anum)
-                        Admin.delete_user(anum)
-                    elif admin_in == 3:
-                        Admin.show_accounts()
-                    elif admin_in == 4:
-                        bank.total_balance()
-                    elif admin_in == 5:
-                        bank.total_loan()
-                    elif admin_in == 6:
-                        bank.loan_on_or_off()
-                    elif admin_in == 7:
-                        break
+                admin()
+            elif Admin.log_in(admin_name, admin_pass):
+                print("Successfully Login")
+                print("-" * 20)
+                admin()
             else:
                 print("Wrong username or password")
 

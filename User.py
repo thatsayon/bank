@@ -29,6 +29,14 @@ class Client(User):
 
 
 class Admin(User):
+    accounts = []
+    def __init__(self, name, email, password):
+        self.name = name 
+        self.email = email 
+        self.password = password
+        Admin.accounts.append(self)
+        print("Admin account created successfully!")
+        
     @staticmethod
     def show_accounts():
         for users in User.accounts:
@@ -39,3 +47,10 @@ class Admin(User):
         for users in User.accounts:
             if users.account_num == ac_num:
                 User.accounts.remove(users)
+
+    @staticmethod
+    def log_in(username, password):
+        for users in Admin.accounts:
+            if username == users.name and password == users.password:
+                return True
+        return False
